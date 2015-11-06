@@ -1,0 +1,28 @@
+{
+  "name": "stylelint-known-property",
+  "description": "Stylelint plugin to check if the css properties are valid",
+  "version": "0.0.1",
+  "repository": "betit/stylelint-known-property",
+  "keywords": [
+    "stylelint",
+    "stylelint-plugin",
+    "css",
+    "lint"
+  ],
+  "author": "Viorel Cojocaru <vio@mavrix.es>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/betit/stylelint-known-property/issues"
+  },
+  "homepage": "https://github.com/betit/stylelint-known-property#readme",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node test"
+  },
+  "peerDependencies": {
+    "stylelint": "^2.1.0"
+  },
+  "devDependencies": {
+    "stylelint-rule-tester": "^0.3.0"
+  }
+}
