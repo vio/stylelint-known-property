@@ -17,6 +17,7 @@
   "homepage": "https://github.com/betit/stylelint-known-property#readme",
   "main": "src/index.js",
   "scripts": {
+    "bump": "npm test && npm version patch && git push && git push --tags && npm publish1",
     "test": "node test"
   },
   "peerDependencies": {
