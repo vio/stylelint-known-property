@@ -2,7 +2,7 @@ var util        = require('util');
 var stylelint   = require('stylelint');
 var report      = stylelint.utils.report;
 
-var properties  = require('./data').properties;
+var properties  = require('./data');
 var ruleName    = 'known-property';
 var propPattern = new RegExp('^-(webkit|moz|o|ms)-(.*)');
 
