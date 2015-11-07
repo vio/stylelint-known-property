@@ -19,7 +19,7 @@ Add the plugin to your [Stylelint config](http://stylelint.io/?/docs/user-guide/
   },
 
   "rules": {
-    "known-property": 2
+    "known-property": [2, ["whitelisted-property"], ["blacklisted-property"]]
   }
 }
 ```
