@@ -1,7 +1,7 @@
 var stylelint   = require('stylelint');
 var report      = stylelint.utils.report;
 
-var properties  = require('./data');
+var properties  = require('./../data');
 var messages    = require('./messages');
 var ruleName    = 'known-property';
 var propPattern = new RegExp('^-(webkit|moz|o|ms)-(.*)');
@@ -16,11 +16,12 @@ function reject(result, node, type) {
 }
 
 function validateProp (prop) {
+  // Remove browser prefix and re-test
   prop = prop.replace(propPattern, function (matches, prefix, propName) {
     return propName;
   });
 
-  return properties.indexOf(prop) !== -1;
+  return properties.indexOf(prop) > -1;
 }
 
 function validate (result, whitelist, blacklist) {
