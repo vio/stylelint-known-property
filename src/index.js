@@ -3,8 +3,9 @@ var report      = stylelint.utils.report;
 
 var properties  = require('./../data');
 var messages    = require('./messages');
+
 var ruleName    = 'known-property';
-var propPattern = new RegExp('^-(webkit|moz|o|ms)-(.*)');
+var browserPrefixPattern = new RegExp('^-(webkit|moz|o|ms)-(.*)');
 
 function reject(result, node, type) {
   report({
@@ -15,29 +16,42 @@ function reject(result, node, type) {
   });
 }
 
-function validateProp (prop) {
-  // Remove browser prefix and re-test
-  prop = prop.replace(propPattern, function (matches, prefix, propName) {
+function propertyExists (prop) {
+  return properties.indexOf(prop) > -1;
+}
+
+function hasBrowserPrefix (prop) {
+  return !!prop.match(browserPrefixPattern);
+}
+
+function removeBrowserPrefix (prop) {
+  return prop.replace(browserPrefixPattern, function (matches, prefix, propName) {
     return propName;
   });
-
-  return properties.indexOf(prop) > -1;
 }
 
 function validate (result, whitelist, blacklist) {
   return function (decl) {
-    if (whitelist && whitelist.indexOf(decl.prop) !== -1) {
+    var prop = decl.prop;
+
+    if (whitelist && whitelist.indexOf(prop) !== -1) {
       return;
     }
 
-    if (blacklist && blacklist.indexOf(decl.prop) !== -1) {
+    if (blacklist && blacklist.indexOf(prop) !== -1) {
       return reject(result, decl, 'blacklisted');
     }
 
-    if (!validateProp(decl.prop)) {
-      return reject(result, decl, 'unknown');
+    if (propertyExists(prop)) {
+      return;
     }
-  }
+
+    if (hasBrowserPrefix(prop) && propertyExists(removeBrowserPrefix(prop))) {
+      return;
+    }
+        
+    return reject(result, decl, 'unknown');
+  };
 }
 
 module.exports = function(whitelist, blacklist) {
