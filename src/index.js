@@ -57,6 +57,10 @@ function validate (result, ignore) {
       return;
     }
 
+    if (utils.isCustomProperty(prop)) {
+      return;
+    }
+
     if (propertyIgnored(prop, ignore)) {
       return;
     }
