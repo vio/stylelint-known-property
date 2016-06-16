@@ -10,16 +10,16 @@ npm install -D stylelint-known-property
 
 ## Usage
 
-Add the plugin to your [Stylelint config](http://stylelint.io/?/docs/user-guide/configuration.md):
+Add the plugin to your [Stylelint config](http://stylelint.io/user-guide/configuration/):
 
 ```
 {
-  "plugins": {
-    "known-property": "stylelint-known-property"
-  },
+  "plugins": [
+    "stylelint-known-property"
+  ],
 
   "rules": {
-    "known-property": [2, ["whitelisted-property"], ["blacklisted-property"]]
+    "known-property": [["whitelisted-property"], ["blacklisted-property"]]
   }
 }
 ```

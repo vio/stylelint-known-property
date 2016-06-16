@@ -1,6 +1,7 @@
-var messages   = require('./../src/messages');
-var ruleTester = require('stylelint-rule-tester');
-var test       = ruleTester(require('./..'), 'known-property');
+var ruleTester    = require('stylelint-rule-tester');
+var knownProperty = require('./../');
+var messages      = require('./../src/messages');
+var test          = ruleTester(knownProperty.rule, knownProperty.ruleName);
 
 var props = {
   whitelisted: ['whitelisted-property'],

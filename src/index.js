@@ -1,10 +1,11 @@
 var stylelint   = require('stylelint');
-var report      = stylelint.utils.report;
+var _           = require('lodash');
 
+var report      = stylelint.utils.report;
 var properties  = require('./../data');
 var messages    = require('./messages');
 
-var ruleName    = 'known-property';
+var ruleName    = 'plugin/known-property';
 var browserPrefixPattern = new RegExp('^-(webkit|moz|o|ms)-(.*)');
 
 function reject(result, node, type) {
@@ -54,8 +55,24 @@ function validate (result, whitelist, blacklist) {
   };
 }
 
-module.exports = function(whitelist, blacklist) {
+module.exports = stylelint.createPlugin(ruleName, function (whitelist, blacklist) {
   return function(root, result) {
+    var validOptions = stylelint.utils.validateOptions(result, ruleName, {
+        actual: whitelist,
+        possible: [_.isString],
+        optional: true
+      }, {
+        actual: blacklist,
+        possible: [_.isString],
+        optional: true
+      });
+
+    if (!validOptions) {
+      return;
+    }
+
     root.walkDecls(validate(result, whitelist, blacklist));
   };
-};
+});
+
+module.exports.ruleName = ruleName;
