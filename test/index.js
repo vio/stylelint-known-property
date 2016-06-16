@@ -5,6 +5,7 @@ var test          = ruleTester(knownProperty.rule, knownProperty.ruleName);
 
 test(true, {ignore: ['ignored-property']}, function (assert) {
     assert.ok('div { color: green; }');
+    assert.ok('div { fill: black; }');
     assert.notOk('div { colr: blue; }', messages.unknown('colr'));
 
     // non standard propery
