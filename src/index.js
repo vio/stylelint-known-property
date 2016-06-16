@@ -72,7 +72,8 @@ function validate (result, ignore) {
 var plugin = stylelint.createPlugin(ruleName, function (enabled, options) {
   return function(root, result) {
     var validOptions = utils.validateOptions(result, ruleName, {
-        actual: enabled
+        actual: enabled,
+        possible: _.isBoolean
       }, {
         actual: options,
         possible: {
@@ -88,6 +89,7 @@ var plugin = stylelint.createPlugin(ruleName, function (enabled, options) {
     if (!enabled) {
       return;
     }
+
 
     if (!options) {
       options = {};
