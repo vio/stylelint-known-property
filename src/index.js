@@ -1,16 +1,25 @@
+var util        = require('util');
 var stylelint   = require('stylelint');
 var _           = require('lodash');
 
 var report      = stylelint.utils.report;
 var properties  = require('./../data');
-var messages    = require('./messages');
 
 var ruleName    = 'plugin/known-property';
 var browserPrefixPattern = new RegExp('^-(webkit|moz|o|ms)-(.*)');
 
+var messages = stylelint.utils.ruleMessages(ruleName, {
+  unknown: function (prop) {
+    return util.format('Unknown property "%s"', prop);
+  },
+  blacklisted: function (prop) {
+    return util.format('Blacklisted property "%s"', prop);
+  }
+});
+
 function reject(result, node, type) {
   report({
-    message: messages(type, node.prop),
+    message: messages[type](node.prop),
     node: node,
     result: result,
     ruleName: ruleName
@@ -76,3 +85,4 @@ module.exports = stylelint.createPlugin(ruleName, function (whitelist, blacklist
 });
 
 module.exports.ruleName = ruleName;
+module.exports.messages = messages;
