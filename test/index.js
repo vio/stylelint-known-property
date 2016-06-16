@@ -7,6 +7,10 @@ test(true, {ignore: ['ignored-property']}, function (assert) {
     assert.ok('div { color: green; }');
     assert.notOk('div { colr: blue; }', messages.unknown('colr'));
 
+    // non standard propery
+    assert.ok('div { $height: 100px; }');
+    assert.ok('div { @height: 100px; }');
+
     // vendors
     assert.ok('a { -webkit-transform: none }');
     assert.ok('a { -moz-transform: none }');

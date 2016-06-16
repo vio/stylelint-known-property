@@ -1,21 +1,21 @@
-var util            = require('util');
-var stylelint       = require('stylelint');
+var format      = require('util').format;
+var stylelint   = require('stylelint');
 var _           = require('lodash');
+var utils       = require('stylelint/dist/utils');
 
-var report      = stylelint.utils.report;
 var properties  = require('./../data');
 
 var ruleName    = 'plugin/known-property';
 var browserPrefixPattern = new RegExp('^-(webkit|moz|o|ms)-(.*)');
 
-var messages = stylelint.utils.ruleMessages(ruleName, {
+var messages = utils.ruleMessages(ruleName, {
   unknown: function (prop) {
-    return util.format('Unknown property "%s"', prop);
+    return format('Unknown property "%s"', prop);
   }
 });
 
 function reject(result, node, type) {
-  report({
+  utils.report({
     message: messages[type](node.prop),
     node: node,
     result: result,
@@ -53,6 +53,10 @@ function validate (result, ignore) {
   return function (decl) {
     var prop = removeBrowserPrefix(decl.prop);
 
+    if (!utils.isStandardSyntaxProperty(prop)) {
+      return;
+    }
+
     if (propertyIgnored(prop, ignore)) {
       return;
     }
@@ -67,7 +71,7 @@ function validate (result, ignore) {
 
 module.exports = stylelint.createPlugin(ruleName, function (enabled, options) {
   return function(root, result) {
-    var validOptions = stylelint.utils.validateOptions(result, ruleName, {
+    var validOptions = utils.validateOptions(result, ruleName, {
         actual: enabled
       }, {
         actual: options,
