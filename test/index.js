@@ -1,24 +1,27 @@
-var messages   = require('./../src/messages');
-var ruleTester = require('stylelint-rule-tester');
-var test       = ruleTester(require('./..'), 'known-property');
+var ruleTester    = require('stylelint-rule-tester');
+var knownProperty = require('./../');
+var messages      = knownProperty.messages
+var test          = ruleTester(knownProperty.rule, knownProperty.ruleName);
 
-var props = {
-  whitelisted: ['whitelisted-property'],
-  blacklisted: ['blacklisted-property']
-};
-
-test(props.whitelisted, props.blacklisted, function (assert) {
+test(true, {ignore: ['ignored-property']}, function (assert) {
     assert.ok('div { color: green; }');
-    assert.notOk('div { colr: blue; }', messages('unknown', 'colr'));
+    assert.ok('div { fill: black; }');
+    assert.notOk('div { colr: blue; }', messages.unknown('colr'));
+
+    // non standard propery
+    assert.ok('div { $height: 100px; }');
+    assert.ok('div { @height: 100px; }');
+
+    // custom property
+    assert.ok(':root { --height: 100px; }');
 
     // vendors
     assert.ok('a { -webkit-transform: none }');
     assert.ok('a { -moz-transform: none }');
     assert.ok('a { -o-transform: none }');
     assert.ok('a { -ms-transform: none }');
-    assert.notOk('a { -x-transform: none }', messages('unknown', '-x-transform'));
+    assert.notOk('a { -x-transform: none }', messages.unknown('-x-transform'));
 
-    // whitelisted & blacklisted
-    assert.ok('a { whitelisted-property: none }');
-    assert.notOk('a { blacklisted-property: none }', messages('blacklisted', 'blacklisted-property'));
+    // ignored property
+    assert.ok('a { ignored-property: none }');
 });

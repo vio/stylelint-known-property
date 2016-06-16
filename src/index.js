@@ -1,27 +1,42 @@
+var format      = require('util').format;
 var stylelint   = require('stylelint');
-var report      = stylelint.utils.report;
+var _           = require('lodash');
+var utils       = require('stylelint/dist/utils');
 
 var properties  = require('./../data');
-var messages    = require('./messages');
 
-var ruleName    = 'known-property';
+var ruleName    = 'plugin/known-property';
 var browserPrefixPattern = new RegExp('^-(webkit|moz|o|ms)-(.*)');
 
+var messages = utils.ruleMessages(ruleName, {
+  unknown: function (prop) {
+    return format('Unknown property "%s"', prop);
+  }
+});
+
 function reject(result, node, type) {
-  report({
-    message: messages(type, node.prop),
+  utils.report({
+    message: messages[type](node.prop),
     node: node,
     result: result,
     ruleName: ruleName
   });
 }
 
-function propertyExists (prop) {
+function isPropertyValid (prop) {
   return properties.indexOf(prop) > -1;
 }
 
-function hasBrowserPrefix (prop) {
-  return !!prop.match(browserPrefixPattern);
+function isPropertyIgnored (prop, ignore) {
+  if (_.isArray(ignore)) {
+    return ignore.indexOf(prop) > -1;
+  }
+
+  if (_.isString(ignore)) {
+    return prop === ignore;
+  }
+
+  return false;
 }
 
 function removeBrowserPrefix (prop) {
@@ -30,32 +45,60 @@ function removeBrowserPrefix (prop) {
   });
 }
 
-function validate (result, whitelist, blacklist) {
+function validate (result, ignore) {
   return function (decl) {
-    var prop = decl.prop;
+    var prop = removeBrowserPrefix(decl.prop);
 
-    if (whitelist && whitelist.indexOf(prop) !== -1) {
+    if (!utils.isStandardSyntaxProperty(prop)) {
       return;
     }
 
-    if (blacklist && blacklist.indexOf(prop) !== -1) {
-      return reject(result, decl, 'blacklisted');
-    }
-
-    if (propertyExists(prop)) {
+    if (utils.isCustomProperty(prop)) {
       return;
     }
 
-    if (hasBrowserPrefix(prop) && propertyExists(removeBrowserPrefix(prop))) {
+    if (isPropertyIgnored(prop, ignore)) {
       return;
     }
-        
+
+    if (isPropertyValid(prop)) {
+      return;
+    }
+
     return reject(result, decl, 'unknown');
   };
 }
 
-module.exports = function(whitelist, blacklist) {
+var plugin = stylelint.createPlugin(ruleName, function (enabled, options) {
   return function(root, result) {
-    root.walkDecls(validate(result, whitelist, blacklist));
+    var validOptions = utils.validateOptions(result, ruleName, {
+        actual: enabled,
+        possible: _.isBoolean
+      }, {
+        actual: options,
+        possible: {
+          ignore: [_.isString],
+        },
+        optional: true
+    });
+
+    if (!validOptions) {
+      return;
+    }
+
+    if (!enabled) {
+      return;
+    }
+
+
+    if (!options) {
+      options = {};
+    }
+
+    root.walkDecls(validate(result, options.ignore));
   };
-};
+});
+
+module.exports = plugin;
+module.exports.ruleName = ruleName;
+module.exports.messages = messages;

@@ -6,7 +6,7 @@ module.exports = {
   // http://drafts.csswg.org/css2/propidx.html
   // http://meiert.com/en/indices/css-properties/
   // http://developer.mozilla.org/en-US/docs/Web/CSS/Reference
-  "css2": [
+  css2: [
     'azimuth',
     'background-attachment',
     'background-color',
@@ -132,7 +132,7 @@ module.exports = {
   // http://developer.mozilla.org/en-US/docs/Web/CSS/Reference
   // http://css-infos.net/
   // http://cssvalues.com/
-  "css3": [
+  css3: [
     'align-content',
     'align-items',
     'align-self',
@@ -352,6 +352,53 @@ module.exports = {
     'word-wrap',
     'wrap-flow',
     'wrap-through',
+    'writing-mode'
+  ],
+
+  // SVG
+  // 
+  // http://www.w3.org/TR/SVG/styling.html#StylingWithCSS
+  svg: [
+    'clip-rule',
+    'mask',
+    'opacity',
+    'enable-background',
+    'filter',
+    'flood-color',
+    'flood-opacity',
+    'lighting-color',
+    'stop-color',
+    'stop-opacity',
+    'pointer-events',
+    'color-interpolation',
+    'color-interpolation-filters',
+    'color-profile',
+    'color-rendering',
+    'fill',
+    'fill-opacity',
+    'fill-rule',
+    'image-rendering',
+    'marker',
+    'marker-end',
+    'marker-mid',
+    'marker-start',
+    'shape-rendering',
+    'stroke',
+    'stroke-dasharray',
+    'stroke-dashoffset',
+    'stroke-linecap',
+    'stroke-linejoin',
+    'stroke-miterlimit',
+    'stroke-opacity',
+    'stroke-width',
+    'text-rendering',
+    'alignment-baseline',
+    'baseline-shift',
+    'dominant-baseline',
+    'glyph-orientation-horizontal',
+    'glyph-orientation-vertical',
+    'kerning',
+    'text-anchor',
     'writing-mode'
   ]
 };
