@@ -23,11 +23,11 @@ function reject(result, node, type) {
   });
 }
 
-function propertyExists (prop) {
+function isPropertyValid (prop) {
   return properties.indexOf(prop) > -1;
 }
 
-function propertyIgnored (prop, ignore) {
+function isPropertyIgnored (prop, ignore) {
   if (_.isArray(ignore)) {
     return ignore.indexOf(prop) > -1;
   }
@@ -37,10 +37,6 @@ function propertyIgnored (prop, ignore) {
   }
 
   return false;
-}
-
-function hasBrowserPrefix (prop) {
-  return !!prop.match(browserPrefixPattern);
 }
 
 function removeBrowserPrefix (prop) {
@@ -61,11 +57,11 @@ function validate (result, ignore) {
       return;
     }
 
-    if (propertyIgnored(prop, ignore)) {
+    if (isPropertyIgnored(prop, ignore)) {
       return;
     }
 
-    if (propertyExists(prop)) {
+    if (isPropertyValid(prop)) {
       return;
     }
 
@@ -73,7 +69,7 @@ function validate (result, ignore) {
   };
 }
 
-module.exports = stylelint.createPlugin(ruleName, function (enabled, options) {
+var plugin = stylelint.createPlugin(ruleName, function (enabled, options) {
   return function(root, result) {
     var validOptions = utils.validateOptions(result, ruleName, {
         actual: enabled
@@ -101,5 +97,6 @@ module.exports = stylelint.createPlugin(ruleName, function (enabled, options) {
   };
 });
 
+module.exports = plugin;
 module.exports.ruleName = ruleName;
 module.exports.messages = messages;
