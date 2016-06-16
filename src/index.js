@@ -1,5 +1,5 @@
-var util        = require('util');
-var stylelint   = require('stylelint');
+var util            = require('util');
+var stylelint       = require('stylelint');
 var _           = require('lodash');
 
 var report      = stylelint.utils.report;
@@ -11,9 +11,6 @@ var browserPrefixPattern = new RegExp('^-(webkit|moz|o|ms)-(.*)');
 var messages = stylelint.utils.ruleMessages(ruleName, {
   unknown: function (prop) {
     return util.format('Unknown property "%s"', prop);
-  },
-  blacklisted: function (prop) {
-    return util.format('Blacklisted property "%s"', prop);
   }
 });
 
@@ -30,6 +27,18 @@ function propertyExists (prop) {
   return properties.indexOf(prop) > -1;
 }
 
+function propertyIgnored (prop, ignore) {
+  if (_.isArray(ignore)) {
+    return ignore.indexOf(prop) > -1;
+  }
+
+  if (_.isString(ignore)) {
+    return prop === ignore;
+  }
+
+  return false;
+}
+
 function hasBrowserPrefix (prop) {
   return !!prop.match(browserPrefixPattern);
 }
@@ -40,47 +49,47 @@ function removeBrowserPrefix (prop) {
   });
 }
 
-function validate (result, whitelist, blacklist) {
+function validate (result, ignore) {
   return function (decl) {
-    var prop = decl.prop;
+    var prop = removeBrowserPrefix(decl.prop);
 
-    if (whitelist && whitelist.indexOf(prop) !== -1) {
+    if (propertyIgnored(prop, ignore)) {
       return;
-    }
-
-    if (blacklist && blacklist.indexOf(prop) !== -1) {
-      return reject(result, decl, 'blacklisted');
     }
 
     if (propertyExists(prop)) {
       return;
     }
 
-    if (hasBrowserPrefix(prop) && propertyExists(removeBrowserPrefix(prop))) {
-      return;
-    }
-        
     return reject(result, decl, 'unknown');
   };
 }
 
-module.exports = stylelint.createPlugin(ruleName, function (whitelist, blacklist) {
+module.exports = stylelint.createPlugin(ruleName, function (enabled, options) {
   return function(root, result) {
     var validOptions = stylelint.utils.validateOptions(result, ruleName, {
-        actual: whitelist,
-        possible: [_.isString],
-        optional: true
+        actual: enabled
       }, {
-        actual: blacklist,
-        possible: [_.isString],
+        actual: options,
+        possible: {
+          ignore: [_.isString],
+        },
         optional: true
-      });
+    });
 
     if (!validOptions) {
       return;
     }
 
-    root.walkDecls(validate(result, whitelist, blacklist));
+    if (!enabled) {
+      return;
+    }
+
+    if (!options) {
+      options = {};
+    }
+
+    root.walkDecls(validate(result, options.ignore));
   };
 });
 

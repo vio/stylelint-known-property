@@ -3,12 +3,7 @@ var knownProperty = require('./../');
 var messages      = knownProperty.messages
 var test          = ruleTester(knownProperty.rule, knownProperty.ruleName);
 
-var props = {
-  whitelisted: ['whitelisted-property'],
-  blacklisted: ['blacklisted-property']
-};
-
-test(props.whitelisted, props.blacklisted, function (assert) {
+test(true, {ignore: ['ignored-property']}, function (assert) {
     assert.ok('div { color: green; }');
     assert.notOk('div { colr: blue; }', messages.unknown('colr'));
 
@@ -19,7 +14,6 @@ test(props.whitelisted, props.blacklisted, function (assert) {
     assert.ok('a { -ms-transform: none }');
     assert.notOk('a { -x-transform: none }', messages.unknown('-x-transform'));
 
-    // whitelisted & blacklisted
-    assert.ok('a { whitelisted-property: none }');
-    assert.notOk('a { blacklisted-property: none }', messages.blacklisted('blacklisted-property'));
+    // ignored property
+    assert.ok('a { ignored-property: none }');
 });
