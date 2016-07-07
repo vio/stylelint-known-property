@@ -3,10 +3,8 @@ var stylelint   = require('stylelint');
 var _           = require('lodash');
 var utils       = require('stylelint/dist/utils');
 
-var properties  = require('./../data');
-
+var properties  = require('known-css-properties').all;
 var ruleName    = 'plugin/known-property';
-var browserPrefixPattern = new RegExp('^-(webkit|moz|o|ms)-(.*)');
 
 var messages = utils.ruleMessages(ruleName, {
   unknown: function (prop) {
@@ -39,15 +37,9 @@ function isPropertyIgnored (prop, ignore) {
   return false;
 }
 
-function removeBrowserPrefix (prop) {
-  return prop.replace(browserPrefixPattern, function (matches, prefix, propName) {
-    return propName;
-  });
-}
-
 function validate (result, ignore) {
   return function (decl) {
-    var prop = removeBrowserPrefix(decl.prop);
+    var prop = decl.prop;
 
     if (!utils.isStandardSyntaxProperty(prop)) {
       return;

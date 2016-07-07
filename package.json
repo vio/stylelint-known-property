@@ -26,5 +26,8 @@
   "devDependencies": {
     "lodash": "^4.13.1",
     "stylelint-rule-tester": "^0.6.0"
+  },
+  "dependencies": {
+    "known-css-properties": "0.0.2"
   }
 }
