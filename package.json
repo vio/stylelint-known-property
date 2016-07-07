@@ -1,7 +1,7 @@
 {
   "name": "stylelint-known-property",
   "description": "Stylelint plugin to check if the css properties are valid",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": "betit/stylelint-known-property",
   "keywords": [
     "stylelint",
@@ -26,5 +26,8 @@
   "devDependencies": {
     "lodash": "^4.13.1",
     "stylelint-rule-tester": "^0.6.0"
+  },
+  "dependencies": {
+    "known-css-properties": "0.0.2"
   }
 }
