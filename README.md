@@ -25,7 +25,7 @@ Add the plugin to your [Stylelint config](http://stylelint.io/user-guide/configu
   ],
 
   "rules": {
-    "known-property": true
+    "plugin/known-property": true
   }
 }
 ```
@@ -38,9 +38,14 @@ With ignored properties:
   ],
 
   "rules": {
-    "known-property": [true, {
+    "plugin/known-property": [true, {
       ignore: ['fill']
     }
   }
 }
 ```
+
+## CSS Properties
+
+CSS properties are validated based on
+[known-css-properties](https://github.com/betit/known-css-properties) list. 
